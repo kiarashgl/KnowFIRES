@@ -2,6 +2,13 @@ import json
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+from pyserini.search.lucene import LuceneSearcher
+import argparse
+import json
+dic_metadata=json.load(open("meta_data_person_instance_categorty.json",'r'))
+dic_links=json.load(open("mappingbased_objects_en.json",'r'))
+searcher = LuceneSearcher('index')
+
 
 app = Flask(__name__)
 cors = CORS(app)
