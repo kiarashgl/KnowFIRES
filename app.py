@@ -34,7 +34,7 @@ def search(retriever):  # put application's code here
     out_dic['query'] = query
     out_dic['retrieved_results'] = {}
     
-    hits = searcher.search(query,k=top_k)
+    hits = searcher.search(query,k=int(top_k))
     for i in range(0, len(hits)):
         initial_name = hits[i].docid
         out_dic['retrieved_results'][initial_name]={}
@@ -46,14 +46,11 @@ def search(retriever):  # put application's code here
         if f'{initial_name}' in dic_metadata:
             meta_data =  dic_metadata[f'{initial_name}']
         
-        if args.meta_data :
-            out_dic['retrieved_results'][initial_name]['meta_data'] = meta_data
+        out_dic['retrieved_results'][initial_name]['meta_data'] = meta_data
 
     return out_dic
 
 
-retriever_file = 'response.json'
-with open(retriever_file, 'r') as file:
-    retriever_result = json.load(file)
+
 if __name__ == '__main__':
     app.run()
