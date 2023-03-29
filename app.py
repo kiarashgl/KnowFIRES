@@ -12,6 +12,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @cross_origin()
 def search(retriever):  # put application's code here
     query = request.args.get("query", "")
+    top_k = request.args.get("k", 10)
     print(retriever)
     return retriever_result
 
