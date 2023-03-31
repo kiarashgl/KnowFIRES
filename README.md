@@ -1,4 +1,4 @@
-# entityvis
+# KnowFIRES
 
 ## Project setup
 ```
