@@ -188,7 +188,7 @@ export default {
             ctx.fillText(label, 0, 0);
             ctx.restore();
           })
-          .onEngineStop(() => this.plot[gid].zoomToFit(400));
+          // .onEngineStop(() => this.plot[gid].zoomToFit(400));
       // this.plot[gid].d3Force('collide', d3.forceCollide(this.plot[gid].nodeRelSize() * 2))
     }
       // setTimeout(this.plot.linkDirectionalParticles, 30000)
