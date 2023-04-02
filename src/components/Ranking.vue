@@ -149,7 +149,6 @@ function truncateLabel(text, width) {
     if(name.length > 13){
       name = name.slice(0, 13) + "..."
     }
-    console.log(name)
     d3.select(this).text(name)
   })
 }

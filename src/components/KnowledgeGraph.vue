@@ -20,8 +20,8 @@
       </v-col>
       <v-col>
         <v-progress-circular indeterminate v-if="searchRunning"></v-progress-circular>
-        <svg id="legend"></svg>
         <div v-show="searchDone">
+          <svg id="legend"></svg>
           <div v-show="merged" id="mygraph"></div>
           <div v-show="!merged" id="mygraph1"></div>
           <div v-show="!merged" id="mygraph2"></div>
@@ -226,7 +226,7 @@ export default {
       this.refreshGraphs()
       var legend = d3.select("#legend").attr("width", 600)
           .attr("height", 50)
-
+      legend.selectAll("*").remove()
       legend.append("circle").attr("cx",10).attr("cy",10).attr("r", 6).style("fill", "#2271B2")
       legend.append("circle").attr("cx",210).attr("cy",10).attr("r", 6).style("fill", "#359B73")
       legend.append("circle").attr("cx",410).attr("cy",10).attr("r", 6).style("fill", "#F748A5")
