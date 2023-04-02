@@ -5,13 +5,16 @@
       color="primary"
       dark
     >
-
+      <v-app-bar-title>KnowFIRES</v-app-bar-title>
       <v-spacer></v-spacer>
-
+        <v-text-field placeholder="Search" v-model="searchQuery" append-icon="mdi-magnify" hide-details dense
+        @keyup.enter="search" @click:append="search"></v-text-field>
+      <v-spacer></v-spacer>
+<!--        <v-btn @click="search" density="compact">S</v-btn>-->
     </v-app-bar>
 
     <v-main>
-      <KnowledgeGraph></KnowledgeGraph>
+      <KnowledgeGraph ref="knowledgeGraph" :searchQuery="searchQuery"></KnowledgeGraph>
     </v-main>
   </v-app>
 </template>
@@ -27,7 +30,12 @@ export default {
   },
 
   data: () => ({
-    //
+    searchQuery: ""
   }),
+  methods: {
+    search: function() {
+      this.$refs.knowledgeGraph.search()
+    }
+  }
 };
 </script>

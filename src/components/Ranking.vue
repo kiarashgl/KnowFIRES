@@ -1,92 +1,166 @@
 <template>
-  <div>
+  <v-card class="pa-2">
+    <h3>Compare Rankings</h3>
     <div id="ranking"></div>
-    {{ rankings }}
-  </div>
+  </v-card>
 </template>
 
 <script>
 import * as d3 from 'd3'
 
+var margin = {top: 30, right: 100, bottom: 10, left: 102},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 export default {
   name: "Ranking",
   props: {
-    rankings: Array
+    rankings: Array,
+    selectedNode: Object,
+    retrievers: Array
+  },
+  data: function () {
+    return {
+      svg: undefined
+    }
+  },
+  mounted() {
+    this.svg = d3.select("#ranking")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
   },
   watch: {
-    rankings: function (oldVal, newVal) {
+    selectedNode: function(newVal, oldVal) {
+      if (newVal === null) {
+        this.svg.selectAll(`path`).classed("dim", false)
+      }
+      else {
+        this.svg.selectAll(`path.name-${newVal.id}`).classed("dim", false)
+        this.svg.selectAll(`path:not(.name-${newVal.id})`).classed("dim", true)
+      }
+    },
+    rankings: function (newVal, oldVal) {
       const topK = this.rankings[0].length
-      var margin = {top: 30, right: 50, bottom: 10, left: 50},
-          width = 460 - margin.left - margin.right,
-          height = 400 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
-      var svg = d3.select("#ranking")
+      d3.select("#ranking svg").remove()
+      this.svg = d3.select("#ranking")
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
-
-      const y = d3.scaleLinear()
-          .domain([1, topK])
+// append the svg object to the body of the page
+      // console.log(newVal);
+      const y1 = d3.scaleBand()
+          .domain(newVal[0].map(item => item[0]))
           .range([0, height])
+          .padding(1)
+      const y2 = d3.scaleBand()
+          .domain(newVal[1].map(item => item[0]))
+          .range([0, height])
+          .padding(1)
 
       var chartData = {}
-      // console.log("ALIAAA")
-      // console.log(this.rankings[0])
-      this.rankings[0].forEach(item => {
-        chartData[item[0]] = [0, 0]
+      newVal[0].forEach(item => {
+        chartData[item[0]] = {color: "#2271B2", list: [0, 0]}
       })
-      this.rankings[1].forEach(item => {
-        chartData[item[0]] = [0, 0]
+      newVal[1].forEach(item => {
+        chartData[item[0]] = {color: "#359B73", list: [0, 0]}
       })
-      this.rankings.forEach((item, index) => {
+      newVal.forEach((item, index) => {
         Object.entries(item).forEach((ii, jj) => {
-          chartData[ii[1][0]][+index] = jj + 1
+          chartData[ii[1][0]].list[+index] = jj + 1
         })
-        // chartData[item]
-        // console.log(item);
       })
-      console.log(chartData);
 
-      svg
+      Object.entries(chartData).forEach(d => {
+        if (d[1].list[0] !== 0 && d[1].list[1] !== 0)
+          d[1].color = "#F748A5"
+      })
+
+
+      const points = Object.entries(chartData).map(d => {
+        const x1 = d[1].list[0] !== 0 ? 0 : 60
+        const yy1 = d[1].list[0] !== 0 ? y1(d[0]) : y2(d[0])
+        const x2 = d[1].list[1] !== 0 ? 80 : 20
+        const yy2 = d[1].list[1] !== 0 ? y2(d[0]) : y1(d[0])
+        return [{x: x1, y: yy1, c: d[1].color, id: d[0]},
+          {x: x2, y: yy2 ,c: d[1].color, id: d[0]},
+        ]
+      })
+      this.svg
           .selectAll("myPath")
-          .data(chartData)
+          .data(points)
           .enter()
           .append("path")
-          // .attr("class", function (d) { return "line " + d.Species } ) // 2 class for each line: 'line' and the group name
-          .attr("d", d3.line()
-              .x(function(d) { return 10 })
-              .y(function(d) {
-                console.log(d);
-                return 20 }))
+          .attr("d", d3.line(d => d.x, d => d.y).curve(d3.curveBumpX))//.curve(d3.curveNatural()))
           .style("fill", "none" )
-          // .style("stroke", function(d){ return( color(d.Species))} )
-          .style("opacity", 0.5)
+          .style("stroke", (d) => {
+            return d[0].c
+          })
+          .style("stroke-width", "5")
+          // .style("opacity", 0.5)
+          .attr("class", d => {
+            return `rank name-${d[0].id}`
+          })
 
-      // // Draw the axis:
-      // svg.selectAll("myAxis")
-      //     // For each dimension of the dataset I add a 'g' element:
-      //     // .data(dimensions).enter()
-      //     .append("g")
-      //     .attr("class", "axis")
-      //     // I translate this element to its right position on the x axis
-      //     .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
-      //     // And I build the axis with the call function
-      //     .each(function(d) { d3.select(this).call(d3.axisLeft().ticks(5).scale(y[d])); })
-      //     // Add axis title
-      //     .append("text")
-      //     .style("text-anchor", "middle")
-      //     .attr("y", -9)
-      //     .text(function(d) { return d; })
-      //     .style("fill", "black")
+      const r1 = this.retrievers[0]
+      const r2 = this.retrievers[1]
+      this.svg
+          // For each dimension of the dataset I add a 'g' element:
+          .append("g")
+          // I translate this element to its right position on the x axis
+          .attr("transform",  "translate(" + 0 + ")")
+          // And I build the axis with the call function
+          .call(d3.axisLeft().scale(y1))
+          // Add axis title
+          .append("text")
+          .style("text-anchor", "middle")
+          .attr("y", -9)
+          .attr("x", -10)
+
+          .text(function(d) { return `Rank in ${r1}`; })
+          .style("fill", "black")
+
+      this.svg
+          .append("g")
+          .attr("transform",  "translate(" + 80 + ")")
+          .call(d3.axisRight().scale(y2))
+          .append("text")
+          .style("text-anchor", "middle")
+          .attr("y", -9)
+          .attr("x", 10)
+          .text(function(d) { return `Rank in ${r2}`; })
+          .style("fill", "black")
+
+          this.svg.selectAll(".tick text")
+          .call(truncateLabel, y2.bandwidth())
+
     }
   }
 }
+function truncateLabel(text, width) {
+  text.each(function() {
+    var name = d3.select(this).text();
+    if(name.length > 13){
+      name = name.slice(0, 13) + "..."
+    }
+    console.log(name)
+    d3.select(this).text(name)
+  })
+}
 </script>
 
-<style scoped>
+<style>
+path.rank.dim {
+  opacity: 0.2!important;
+}
+path {
+  transition: all 0.5s ease;
 
+}
 </style>
