@@ -20,12 +20,12 @@
       </v-col>
       <v-col>
         <v-progress-circular indeterminate v-if="searchRunning"></v-progress-circular>
-        <div v-show="searchDone">
+        <v-card class="pa-3" v-show="searchDone">
           <svg id="legend"></svg>
           <div v-show="merged" id="mygraph"></div>
           <div v-show="!merged" id="mygraph1"></div>
           <div v-show="!merged" id="mygraph2"></div>
-        </div>
+        </v-card>
       </v-col>
       <v-col cols="3">
           <Ranking v-show="searchDone" :retrievers="selectedRetrievers" :rankings="rankings" :selectedNode="selectedNode"></Ranking>
