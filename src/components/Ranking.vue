@@ -33,6 +33,7 @@ export default {
             "translate(" + margin.left + "," + margin.top + ")");
   },
   watch: {
+    // Change opacity of lines based on node selection
     selectedNode: function(newVal, oldVal) {
       if (newVal === null) {
         this.svg.selectAll(`path`).classed("dim", false)
@@ -42,6 +43,7 @@ export default {
         this.svg.selectAll(`path:not(.name-${normalize(newVal.id)})`).classed("dim", true)
       }
     },
+    // Create the entity ranking comparison plot
     rankings: function (newVal, oldVal) {
       const topK = this.rankings[0].length
 
@@ -53,8 +55,6 @@ export default {
           .append("g")
           .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
-// append the svg object to the body of the page
-      // console.log(newVal);
       const y1 = d3.scaleBand()
           .domain(newVal[0].map(item => item[0]))
           .range([0, height])
@@ -97,13 +97,12 @@ export default {
           .data(points)
           .enter()
           .append("path")
-          .attr("d", d3.line(d => d.x, d => d.y).curve(d3.curveBumpX))//.curve(d3.curveNatural()))
+          .attr("d", d3.line(d => d.x, d => d.y).curve(d3.curveBumpX))
           .style("fill", "none" )
           .style("stroke", (d) => {
             return d[0].c
           })
           .style("stroke-width", "5")
-          // .style("opacity", 0.5)
           .attr("class", d => {
             return `rank name-${normalize(d[0].id)}`
           })
@@ -111,13 +110,9 @@ export default {
       const r1 = this.retrievers[0]
       const r2 = this.retrievers[1]
       this.svg
-          // For each dimension of the dataset I add a 'g' element:
           .append("g")
-          // I translate this element to its right position on the x axis
           .attr("transform",  "translate(" + 0 + ")")
-          // And I build the axis with the call function
           .call(d3.axisLeft().scale(y1))
-          // Add axis title
           .append("text")
           .style("text-anchor", "middle")
           .attr("y", -9)
@@ -144,10 +139,9 @@ export default {
   }
 }
 
+// Remove parentheses and underlines from labels
 function normalize(text) {
-  const a = text.replaceAll("\(", "_").replaceAll("\)", "_");
-  console.log(a);
-  return a
+  return text.replaceAll("\(", "_").replaceAll("\)", "_")
 }
 
 function truncateLabel(text, width) {

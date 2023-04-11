@@ -10,7 +10,6 @@
         <v-text-field placeholder="Search" v-model="searchQuery" append-icon="mdi-magnify" hide-details dense
         @keyup.enter="search" @click:append="search"></v-text-field>
       <v-spacer></v-spacer>
-<!--        <v-btn @click="search" density="compact">S</v-btn>-->
     </v-app-bar>
 
     <v-main>

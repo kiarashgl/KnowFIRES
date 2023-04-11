@@ -4,7 +4,6 @@
       <v-col cols="3">
         <v-card class="pa-3 mb-4">
           <h3>Retriever Selector</h3>
-<!--          <v-card-title>Options</v-card-title>-->
           <v-row>
             <v-col>
               <v-select density="compact" label="Retriever 1" v-model="selectedRetrievers[0]" :items="retrievers"></v-select>
@@ -93,13 +92,12 @@ export default {
       commonIds: []
     }
   },
+  // Create the graph structures
   mounted() {
-
     const ll = ['mygraph', 'mygraph1', 'mygraph2']
     for (const i in ll) {
       const gid = ll[i]
       this.plot[gid](document.getElementById(gid))
-          // .linkDirectionalParticles(2)
           .nodeId('id')
           .nodeAutoColorBy('retriever')
           .backgroundColor("white")
@@ -118,7 +116,6 @@ export default {
             const fontSize = (node.retriever === "query" ? 18 : (node.score)) / 3;
 
             ctx.font = `${fontSize}px Sans-Serif`;
-            // node.color = color
             const textWidth = ctx.measureText(label).width;
             const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
 
@@ -129,7 +126,7 @@ export default {
             ctx.fillStyle = node.color;
             ctx.fillText(label, node.x, node.y);
 
-            node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+            node.__bckgDimensions = bckgDimensions;
           })
           .nodePointerAreaPaint((node, color, ctx) => {
             ctx.fillStyle = color;
@@ -150,12 +147,10 @@ export default {
             const start = link.source;
             const end = link.target;
 
-            // ignore unbound links
             if (typeof start !== 'object' || typeof end !== 'object') return;
 
-            // calculate label positioning
             const textPos = Object.assign(...['x', 'y'].map(c => ({
-              [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+              [c]: start[c] + (end[c] - start[c]) / 2
             })));
 
             const relLink = {x: end.x - start.x, y: end.y - start.y};
@@ -163,20 +158,16 @@ export default {
             const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
 
             let textAngle = Math.atan2(relLink.y, relLink.x);
-            // maintain label vertical orientation for legibility
             if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
             if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
 
             const label = link.p;
-
-            // estimate fontSize to fit in link length
             ctx.font = '1px Sans-Serif';
             const fontSize = Math.min(MAX_FONT_SIZE, maxTextLength / ctx.measureText(label).width);
             ctx.font = `${fontSize}px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
             const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
 
-            // draw text label (with background rect)
             ctx.save();
             ctx.translate(textPos.x, textPos.y);
             ctx.rotate(textAngle);
@@ -190,14 +181,10 @@ export default {
             ctx.fillText(label, 0, 0);
             ctx.restore();
           })
-          // .onEngineStop(() => this.plot[gid].zoomToFit(400));
-      // this.plot[gid].d3Force('collide', d3.forceCollide(this.plot[gid].nodeRelSize() * 2))
     }
-      // setTimeout(this.plot.linkDirectionalParticles, 30000)
-          // .d3Force('link')
-      // .distance(100);
   },
   methods: {
+    // Maintain the node color based on appearance in retrieval results
     nodeColor: function(node) {
       if (this.commonIds.includes(node.id))
         return "#F748A5";
@@ -206,22 +193,22 @@ export default {
               : ((node.retriever === "Both" ? "#F748A5"
                   : (node.retriever === "query" ? "black" : "#bbb8b8")))))
     },
+    // Get sorted order of retrieved entities
     generateRankings: function(res, retriever) {
       return Object.entries(res.retrieved_results).map((item, value) => [+item[1].rank, item]).sort((a, b) => {
         return a[0] - b[0]
       }).map(item => item[1])
     },
+    // Send GET request to backend and fetch responses
     search: async function () {
       this.searchDone = false
       this.searchRunning = true
 
       this.selectedNode = null
       this.commonIds = []
-      // this.refreshGraphs()
       for (var [index, retriever] of this.selectedRetrievers.entries()) {
         const res = await axios.get(`http://129.97.186.146:5000/search/${retriever}`,
             {params: {query: this.searchQuery, k: this.topK}})
-        // const res = await axios.get(`http://localhost:5000/search/${retriever}`, {params: {query: this.searchQuery}})
         const data = res.data
         this.responses[retriever] = data
       }
@@ -239,6 +226,7 @@ export default {
       this.searchRunning = false
       this.searchDone = true
     },
+    // Regenerate graphs based on new responses
     refreshGraphs: function() {
       for (var [index, retriever] of this.selectedRetrievers.entries()) {
         const data = this.responses[retriever]
@@ -249,6 +237,7 @@ export default {
       this.generateGraph(this.selectedRetrievers.slice(0, 1).entries(), this.graph.graph2)
       this.generateGraph(this.selectedRetrievers.slice(1, 2).entries(), this.graph.graph3)
     },
+    // Generate graph nodes and links
     generateGraph: function(retrievers, graph) {
       var ids = {}
 

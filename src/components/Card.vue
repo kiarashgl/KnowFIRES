@@ -20,7 +20,6 @@
         <v-chip class="my-1 mr-1" v-for="(item, i) in entity.metadata.subject" :key="i">{{ replaceUnderline(item) }}</v-chip>
 
       </div>
-      <!--      {{entity.metadata}}-->
     </v-card-text>
   </v-card>
 </div>
@@ -63,17 +62,6 @@ a {
 
 .v-card__title {
   word-break: normal;
-}
-
-/* we will explain what these classes do next! */
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 
 </style>
