@@ -1,5 +1,5 @@
 # KnowFIRES
-
+A Knowledge-graph Framework for Interpreting Retrieved Entities from Search
 # How to run
 
 ## Backend
