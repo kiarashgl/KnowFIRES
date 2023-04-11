@@ -38,8 +38,8 @@ export default {
         this.svg.selectAll(`path`).classed("dim", false)
       }
       else {
-        this.svg.selectAll(`path.name-${newVal.id}`).classed("dim", false)
-        this.svg.selectAll(`path:not(.name-${newVal.id})`).classed("dim", true)
+        this.svg.selectAll(`path.name-${normalize(newVal.id)}`).classed("dim", false)
+        this.svg.selectAll(`path:not(.name-${normalize(newVal.id)})`).classed("dim", true)
       }
     },
     rankings: function (newVal, oldVal) {
@@ -105,7 +105,7 @@ export default {
           .style("stroke-width", "5")
           // .style("opacity", 0.5)
           .attr("class", d => {
-            return `rank name-${d[0].id}`
+            return `rank name-${normalize(d[0].id)}`
           })
 
       const r1 = this.retrievers[0]
@@ -143,9 +143,16 @@ export default {
     }
   }
 }
+
+function normalize(text) {
+  const a = text.replaceAll("\(", "_").replaceAll("\)", "_");
+  console.log(a);
+  return a
+}
+
 function truncateLabel(text, width) {
   text.each(function() {
-    var name = d3.select(this).text();
+    var name = d3.select(this).text().replaceAll("_", " ");
     if(name.length > 13){
       name = name.slice(0, 13) + "..."
     }

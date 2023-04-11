@@ -1,5 +1,7 @@
 <template>
-  <v-card v-if="entity" :key="entity.id">
+<div v-if="entity" :key="entity.id">
+  <h3>Related Content</h3>
+  <v-card >
     <v-img v-if="hasImage" :src="entity.metadata.image"></v-img>
     <v-card-title>
       <a :href="'https://en.wikipedia.org/wiki/' + entity.id">
@@ -15,12 +17,14 @@
 
       <div v-if="entity.metadata.subject" id="subjects">
         Related subjects:
-        <v-chip class="my-1 mr-1" v-for="item in entity.metadata.subject">{{ replaceUnderline(item) }}</v-chip>
+        <v-chip class="my-1 mr-1" v-for="(item, i) in entity.metadata.subject" :key="i">{{ replaceUnderline(item) }}</v-chip>
 
       </div>
       <!--      {{entity.metadata}}-->
     </v-card-text>
   </v-card>
+</div>
+
 </template>
 
 <script>

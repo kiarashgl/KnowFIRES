@@ -3,6 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-card class="pa-3 mb-4">
+          <h3>Retriever Selector</h3>
 <!--          <v-card-title>Options</v-card-title>-->
           <v-row>
             <v-col>
@@ -21,6 +22,7 @@
       <v-col>
         <v-progress-circular indeterminate v-if="searchRunning"></v-progress-circular>
         <v-card class="pa-3" v-show="searchDone">
+          <h3 class="mb-2">Knowledge Graph</h3>
           <svg id="legend"></svg>
           <div v-show="merged" id="mygraph"></div>
           <div v-show="!merged" id="mygraph1"></div>
