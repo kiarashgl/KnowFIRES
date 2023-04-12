@@ -1,6 +1,7 @@
 # KnowFIRES
 A Knowledge-graph Framework for Interpreting Retrieved Entities from Search
 # How to run
+First, you need to download and extract the relevant metadata for the knowledge graph, was well as the indexed dbpedia from [here](https://drive.google.com/drive/folders/1uBGISKdQhHDEfG6ma6HpccSYD8LOiEak?usp=share_link). 
 
 ## Backend
 First, extract the index and metadata files in the backend folder. Then, create and activate a virtual environment using
