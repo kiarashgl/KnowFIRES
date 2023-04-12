@@ -9,7 +9,7 @@ tar -xf dbpedia.tar.gz
 tar -xf index.tar.gz
 ```
 
-Further, you shall run the preprocessing scripts to prepare the metda data for all the entities in the knowledge graph as follows:
+Further, you shall run the preprocessing scripts to prepare the meta data for all the entities in the knowledge graph as follows:
 ```
 python backend/preprocessing.py
 ```
@@ -26,10 +26,7 @@ After that, install the requirements:
 cd backend
 pip install -r requirements.txt
 ```
-Then, run the preprocessing script:
-```bash
-python preprocessing.py
-```
+
 Finally, the web app could be run:
 ```bash
 python app.py
