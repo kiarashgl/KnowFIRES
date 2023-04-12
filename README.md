@@ -1,7 +1,19 @@
 # KnowFIRES
 A Knowledge-graph Framework for Interpreting Retrieved Entities from Search
 # How to run
-First, you need to download and extract the relevant metadata for the knowledge graph, was well as the indexed dbpedia from [here](https://drive.google.com/drive/folders/1uBGISKdQhHDEfG6ma6HpccSYD8LOiEak?usp=share_link). 
+
+After cloning this repo, you need to download and extract the relevant metadata for the knowledge graph, was well as the indexed dbpedia from [here](https://drive.google.com/drive/folders/1uBGISKdQhHDEfG6ma6HpccSYD8LOiEak?usp=share_link). 
+
+```
+tar -xf dbpedia.tar.gz
+tar -xf index.tar.gz
+```
+
+Further, you shall run the preprocessing scripts to prepare the metda data for all the entities in the knowledge graph as follows:
+```
+python backend/preprocessing.py
+```
+This step, might take a few minutes.
 
 ## Backend
 First, extract the index and metadata files in the backend folder. Then, create and activate a virtual environment using
