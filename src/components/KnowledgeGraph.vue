@@ -113,7 +113,7 @@ export default {
               if (node.metadata.hasOwnProperty('image'))
                 label = label + " ℹ️"
             }
-            const fontSize = (node.retriever === "query" ? 18 : (node.score)) / 3;
+            const fontSize = node.score / 3;
 
             ctx.font = `${fontSize}px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
@@ -244,7 +244,7 @@ export default {
       graph.nodes = []
       graph.links = []
       // this.rankings = [[], []]
-      graph.nodes.push({id: "query", retriever: "query", name: this.searchQuery})
+      graph.nodes.push({id: "query", retriever: "query", name: this.searchQuery, score: 12})
 
       for (var [index, retriever] of retrievers) {
         const data = this.responses[retriever]
@@ -273,7 +273,8 @@ export default {
           } else {
             graph.nodes[ids[item[0]]].retriever = "Both"
             this.commonIds.push(item[0])
-            graph.nodes[ids[item[0]]].score += entryData.score
+            graph.nodes[ids[item[0]]].score += entryData.score * .8
+            graph.nodes[ids[item[0]]].score *= 0.6
           }
           graph.nodes.forEach(node => node.color = this.nodeColor(node))
           if (this.showNeighbors)
