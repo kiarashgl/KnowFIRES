@@ -207,7 +207,7 @@ export default {
       this.selectedNode = null
       this.commonIds = []
       for (var [index, retriever] of this.selectedRetrievers.entries()) {
-        const res = await axios.get(`http://129.97.186.146:5000/search/${retriever}`,
+        const res = await axios.get(`http://knowfires.live:5000/search/${retriever}`,
             {params: {query: this.searchQuery, k: this.topK}})
         const data = res.data
         this.responses[retriever] = data
