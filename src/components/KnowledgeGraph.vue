@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-5" fluid>
     <v-row>
-      <v-col cols="3">
+      <v-col md="3" cols=12>
         <v-card class="pa-3 mb-4">
           <h3>Retriever Selector</h3>
           <v-row>
@@ -28,7 +28,7 @@
           <div v-show="!merged" id="mygraph2"></div>
         </v-card>
       </v-col>
-      <v-col cols="3">
+      <v-col md="3" cols=12>
           <Ranking v-show="searchDone" :retrievers="selectedRetrievers" :rankings="rankings" :selectedNode="selectedNode"></Ranking>
       </v-col>
     </v-row>
