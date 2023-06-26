@@ -15,6 +15,13 @@ python backend/preprocessing.py
 ```
 This step, might take a few minutes.
 
+In case you do not want to do the preprocessing, download the processed indices and necessary files from here and extract them as follows : 
+```
+tar -xf knowfires_data.tar.gz
+mv knowfires_data/* .
+rm -r knowfires_data
+```
+After that, you can proceed to running the backend stage.
 ## Backend
 First, extract the index and metadata files in the backend folder. Then, create and activate a virtual environment using
 ```bash
