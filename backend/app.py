@@ -14,7 +14,7 @@ searcherprf = LuceneSearcher('index')
 searcherprf.set_rm3()
 
 searcherColBERT = FaissSearcher(
-    '/home/narabzad/cs889/path/to/output/dir',
+    'colbert',
     'castorini/tct_colbert-v2-hnp-msmarco'
 )
 
