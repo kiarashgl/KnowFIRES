@@ -15,7 +15,7 @@ python backend/preprocessing.py
 ```
 This step, might take a few minutes.
 
-In case you do not want to do the preprocessing, download the processed indices and necessary files from here and extract them as follows : 
+In case you do not want to do the preprocessing, download the processed indices and [necessary files from here](https://www.dropbox.com/s/nuenb83ixub6x6p/knowfires_data.tar.gz?dl=0) and extract them as follows : 
 ```
 tar -xf knowfires_data.tar.gz
 mv knowfires_data/* .
